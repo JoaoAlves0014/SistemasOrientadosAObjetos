@@ -1,1 +1,368 @@
+using System;
+using System.Collections.Generic;
 
+#region 1. Classes e Construtores
+
+class Animal
+{
+    public string Nome { get; set; }
+
+    public Animal() { }
+
+    public Animal(string nome)
+    {
+        Nome = nome;
+    }
+
+    public virtual void FazerSom()
+    {
+        Console.WriteLine("Som genérico de animal");
+    }
+}
+
+class Gato : Animal
+{
+    public Gato(string nome) : base(nome) { }
+
+    public override void FazerSom()
+    {
+        Console.WriteLine("Miau");
+    }
+}
+
+#endregion
+
+#region 2. Herança
+
+class Veiculo
+{
+    public string Marca { get; set; }
+    public string Modelo { get; set; }
+
+    public Veiculo(string marca, string modelo)
+    {
+        Marca = marca;
+        Modelo = modelo;
+    }
+
+    public virtual void MostrarInfo()
+    {
+        Console.WriteLine($"Marca: {Marca}, Modelo: {Modelo}");
+    }
+
+    public virtual void Acelerar()
+    {
+        Console.WriteLine("O veículo está acelerando.");
+    }
+}
+
+class Carro : Veiculo
+{
+    public Carro(string marca, string modelo) : base(marca, modelo) { }
+
+    public override void MostrarInfo()
+    {
+        Console.WriteLine($"[Carro] Marca: {Marca}, Modelo: {Modelo}");
+    }
+
+    public override void Acelerar()
+    {
+        Console.WriteLine("O carro acelera suavemente.");
+    }
+}
+
+class Moto : Veiculo
+{
+    public Moto(string marca, string modelo) : base(marca, modelo) { }
+
+    public override void MostrarInfo()
+    {
+        Console.WriteLine($"[Moto] Marca: {Marca}, Modelo: {Modelo}");
+    }
+
+    public override void Acelerar()
+    {
+        Console.WriteLine("A moto acelera rapidamente.");
+    }
+}
+
+#endregion
+
+#region 3. Polimorfismo
+
+abstract class Forma
+{
+    public abstract double CalcularArea();
+}
+
+class Retangulo : Forma
+{
+    public double Largura { get; set; }
+    public double Altura { get; set; }
+
+    public Retangulo(double largura, double altura)
+    {
+        Largura = largura;
+        Altura = altura;
+    }
+
+    public override double CalcularArea()
+    {
+        return Largura * Altura;
+    }
+}
+
+class Circulo : Forma
+{
+    public double Raio { get; set; }
+
+    public Circulo(double raio)
+    {
+        Raio = raio;
+    }
+
+    public override double CalcularArea()
+    {
+        return Math.PI * Raio * Raio;
+    }
+}
+
+abstract class Funcionario
+{
+    public string Nome { get; set; }
+    public abstract decimal CalcularSalario();
+}
+
+class Gerente : Funcionario
+{
+    public decimal SalarioBase { get; set; }
+
+    public Gerente(string nome, decimal salarioBase)
+    {
+        Nome = nome;
+        SalarioBase = salarioBase;
+    }
+
+    public override decimal CalcularSalario()
+    {
+        return SalarioBase + 2000;
+    }
+}
+
+class Desenvolvedor : Funcionario
+{
+    public decimal SalarioBase { get; set; }
+
+    public Desenvolvedor(string nome, decimal salarioBase)
+    {
+        Nome = nome;
+        SalarioBase = salarioBase;
+    }
+
+    public override decimal CalcularSalario()
+    {
+        return SalarioBase + 1000;
+    }
+}
+
+#endregion
+
+#region 4. Combinação de Conceitos
+
+class ContaBancaria
+{
+    public string NumeroConta { get; set; }
+    public decimal Saldo { get; protected set; }
+
+    public ContaBancaria(string numeroConta, decimal saldo)
+    {
+        NumeroConta = numeroConta;
+        Saldo = saldo;
+    }
+
+    public void Depositar(decimal valor)
+    {
+        Saldo += valor;
+    }
+
+    public virtual void Sacar(decimal valor)
+    {
+        if (valor <= Saldo)
+            Saldo -= valor;
+    }
+}
+
+class ContaPoupanca : ContaBancaria
+{
+    public decimal TaxaJuros { get; set; }
+
+    public ContaPoupanca(string numeroConta, decimal saldo, decimal taxaJuros)
+        : base(numeroConta, saldo)
+    {
+        TaxaJuros = taxaJuros;
+    }
+
+    public override void Sacar(decimal valor)
+    {
+        decimal valorComTaxa = valor + (valor * TaxaJuros);
+        base.Sacar(valorComTaxa);
+    }
+}
+
+abstract class Produto
+{
+    public string Nome { get; set; }
+    public decimal Preco { get; set; }
+
+    protected Produto(string nome, decimal preco)
+    {
+        Nome = nome;
+        Preco = preco;
+    }
+
+    public abstract void MostrarDetalhes();
+}
+
+class ProdutoEletronico : Produto
+{
+    public ProdutoEletronico(string nome, decimal preco) : base(nome, preco) { }
+
+    public override void MostrarDetalhes()
+    {
+        Console.WriteLine($"[Eletrônico] {Nome} - R${Preco}");
+    }
+}
+
+class ProdutoAlimenticio : Produto
+{
+    public ProdutoAlimenticio(string nome, decimal preco) : base(nome, preco) { }
+
+    public override void MostrarDetalhes()
+    {
+        Console.WriteLine($"[Alimento] {Nome} - R${Preco}");
+    }
+}
+
+#endregion
+
+#region 5. Encapsulamento
+
+class ProdutoEncapsulado
+{
+    private string nome;
+    private decimal preco;
+
+    public ProdutoEncapsulado(string nome, decimal preco)
+    {
+        this.nome = nome;
+        Preco = preco;
+    }
+
+    public string Nome
+    {
+        get => nome;
+        set => nome = value;
+    }
+
+    public decimal Preco
+    {
+        get => preco;
+        set => preco = value < 0 ? 0 : value;
+    }
+}
+
+class Pessoa
+{
+    private string nome;
+    private int idade;
+
+    public Pessoa(string nome, int idade)
+    {
+        this.nome = nome;
+        this.idade = idade;
+    }
+
+    public void Aniversario()
+    {
+        idade++;
+    }
+
+    public int Idade => idade;
+}
+
+class Endereco
+{
+    private string rua;
+    private int numero;
+    private string cidade;
+
+    public Endereco(string rua, int numero, string cidade)
+    {
+        this.rua = rua;
+        this.numero = numero;
+        this.cidade = cidade;
+    }
+
+    public void ExibirEndereco()
+    {
+        Console.WriteLine($"{rua}, {numero} - {cidade}");
+    }
+}
+
+class FuncionarioEncapsulado
+{
+    private string nome;
+    private decimal salario;
+
+    public FuncionarioEncapsulado(string nome, decimal salario)
+    {
+        this.nome = nome;
+        this.salario = salario;
+    }
+
+    public void AumentarSalario(decimal percentual)
+    {
+        salario += salario * (percentual / 100);
+    }
+
+    public decimal Salario => salario;
+}
+
+#endregion
+
+
+class Program
+{
+    static void Main()
+    {
+
+        List<Forma> formas = new List<Forma>
+        {
+            new Retangulo(3, 4),
+            new Circulo(2)
+        };
+        foreach (var forma in formas)
+            Console.WriteLine("Área: " + forma.CalcularArea());
+
+        List<Funcionario> funcionarios = new List<Funcionario>
+        {
+            new Gerente("Ana", 5000),
+            new Desenvolvedor("João", 3000)
+        };
+        foreach (var f in funcionarios)
+            Console.WriteLine($"{f.Nome} - Salário: {f.CalcularSalario()}");
+
+
+        List<Produto> produtos = new List<Produto>
+        {
+            new ProdutoEletronico("Notebook", 3500),
+            new ProdutoAlimenticio("Maçã", 2.5m)
+        };
+        foreach (var p in produtos)
+            p.MostrarDetalhes();
+
+
+        Console.WriteLine("\nPressione Enter para sair...");
+        Console.ReadLine();
+    }
+}
